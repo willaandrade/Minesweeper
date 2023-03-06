@@ -26,9 +26,9 @@ void setup ()
       setMines();
     //check whats in mines
     
-    for(int i = 0; i<mines.size();i++){
-      System.out.println(mines.get(i).getmyCol()+", " +mines.get(i).getmyRow());     
-    }
+  //  for(int i = 0; i<mines.size();i++){
+ //     System.out.println(mines.get(i).getmyCol()+", " +mines.get(i).getmyRow());     
+ //   }
     
 }
 public void setMines()
@@ -48,9 +48,6 @@ if(!isWon()&&!isLost()){
     if(isWon() == true){
        displayWinningMessage();
     }
-  //  if(isLost()==true){
-   //   displayLosingMessage();
-   // }
 }
 public boolean isWon()
 {
@@ -93,7 +90,7 @@ public void resetMines(int row, int col){
     resetMines(row,col);
   } 
   buttons[row][col].mousePressed();
-  System.out.println("mines reset bc user clicked " + row + ", " + col);
+ // System.out.println("mines reset bc user clicked " + row + ", " + col);
   }
   
   
@@ -151,7 +148,7 @@ public class MSButton
        else if(mines.contains(this)&&firstClick==false){
           myClick = 0; 
          displayLosingMessage();
-           System.out.println("hit a mine: "+myRow+", "+myCol);
+           //System.out.println("hit a mine: "+myRow+", "+myCol);
        }
        else if(mines.contains(this)&&firstClick==true){
          myClick = 0;
@@ -160,7 +157,7 @@ public class MSButton
         else if(numMines>0){
           myClick = 0;
           setLabel(numMines);
-          System.out.println("counted mines: there are "+numMines+" mines.");
+         // System.out.println("counted mines: there are "+numMines+" mines.");
         }
         else {
           myClick = 0;
