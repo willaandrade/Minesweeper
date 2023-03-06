@@ -43,9 +43,13 @@ public void setMines()
 public void draw ()
 {
 if(!isWon()&&!isLost()){
-  background(0);
+    background(0);
+     textSize(30);
+    fill(250);
+    text("game on!",width/2,20);
 }
     if(isWon() == true){
+       background(0);
        displayWinningMessage();
     }
 }
@@ -147,6 +151,7 @@ public class MSButton
        }
        else if(mines.contains(this)&&firstClick==false){
           myClick = 0; 
+          background(0);
          displayLosingMessage();
            //System.out.println("hit a mine: "+myRow+", "+myCol);
        }
