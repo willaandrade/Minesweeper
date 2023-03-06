@@ -1,7 +1,7 @@
 import de.bezier.guido.*;
 //Declare and initialize constants NUM_ROWS and NUM_COLS = 20
-public final static int NUM_ROWS = 15;
-public final static int NUM_COLS = 15;
+public final static int NUM_ROWS = 10;
+public final static int NUM_COLS = 10;
 private MSButton[][] buttons; //2d array of minesweeper buttons
 private ArrayList <MSButton> mines = new ArrayList <MSButton>(); //ArrayList of just the minesweeper buttons that are mines
 private boolean firstClick = true;
@@ -42,11 +42,15 @@ public void setMines()
 
 public void draw ()
 {
-    background( 0 );
+if(!isWon()&&!isLost()){
+  background(0);
+}
     if(isWon() == true){
-        displayWinningMessage();
+       displayWinningMessage();
     }
-    displayLosingMessage();
+  //  if(isLost()==true){
+   //   displayLosingMessage();
+   // }
 }
 public boolean isWon()
 {
@@ -56,34 +60,39 @@ public boolean isWon()
           return false;//if there are safe spaces that haven't been clicked
     return true;
 }
+
+public boolean isLost()
+{
+  for(int r = 0;r<NUM_ROWS;r++){
+      for(int c = 0; c<NUM_COLS;c++){
+        if(mines.contains(buttons[r][c])&&buttons[r][c].clicked&&buttons[r][c].myClick == 0)
+          return true;
+        }}
+        return false;
+}
+
+
+
 public void displayLosingMessage()
 {
-    for(int r = 0;r<NUM_ROWS;r++){
-      for(int c = 0; c<NUM_COLS;c++){
-        if(mines.contains(buttons[r][c])&&buttons[r][c].clicked&&mouseButton!=RIGHT&&!firstClick){
-          for(int i = 0;i<mines.size();i++){
-            mines.get(i).clicked = true;
-          }
-            textSize(50);
-            fill(250);
-            text("YOU LOST!",width/2,25);
-        }
-        else if (firstClick&&((mines.contains(buttons[r][c])&&buttons[r][c].clicked)||countMines(r,c)!=0)){
-            resetMines(r,c);
-      }}
+   for(int i = 0;i<mines.size();i++){
+    mines.get(i).clicked = true;
     }
-}
+    textSize(50);
+    fill(250);
+    text("YOU LOST!",width/2,25);
+    }
+
 
 public void resetMines(int row, int col){
   while(mines.size()>0){mines.remove(0);}
   int amountOfMines = (int)(Math.random()*15)+15;
   for(int i = 0; i<amountOfMines;i++)
    setMines();
-  if(mines.contains(buttons[row][col])){
+  if(mines.contains(buttons[row][col])||countMines(row,col)!=0){
     resetMines(row,col);
   } 
   buttons[row][col].mousePressed();
-  firstClick = false;
   System.out.println("mines reset bc user clicked " + row + ", " + col);
   }
   
@@ -109,13 +118,13 @@ public int countMines(int row, int col)
         if (isValid(r,c)&&mines.contains(buttons[r][c])){numMines++;}
     return numMines;
 }
-
 public class MSButton
 {
     private int myRow, myCol;
     private float x,y, width, height;
     private boolean clicked, flagged;
     private String myLabel;
+    private int myClick;//1= RIGHT,2=LEFT
     
     public MSButton ( int row, int col )
     {
@@ -135,25 +144,34 @@ public class MSButton
     {
         clicked = true; 
         int numMines = countMines(myRow,myCol);
-        if(mouseButton == RIGHT)
+       if(mouseButton == RIGHT){
+          myClick = 1;
           flagged=!flagged;
-       
-       else if(mines.contains(this)){
-           displayLosingMessage();
-           System.out.println("hit a mine");
+       }
+       else if(mines.contains(this)&&firstClick==false){
+          myClick = 0; 
+         displayLosingMessage();
+           System.out.println("hit a mine: "+myRow+", "+myCol);
+       }
+       else if(mines.contains(this)&&firstClick==true){
+         myClick = 0;
+         resetMines(myRow,myCol);
        }
         else if(numMines>0){
+          myClick = 0;
           setLabel(numMines);
           System.out.println("counted mines: there are "+numMines+" mines.");
         }
         else {
+          myClick = 0;
           for(int r = myRow-1;r<=myRow+1;r++){
             for(int c = myCol-1;c<=myCol+1;c++)
               if(isValid(r,c)&&!buttons[r][c].clicked)
                 buttons[r][c].mousePressed();
           }
-        System.out.println("no mines, recursed");
+        //System.out.println("no mines, recursed");
         }
+        firstClick = false; 
     }
     public void draw () 
     {    
